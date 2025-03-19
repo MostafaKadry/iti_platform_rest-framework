@@ -6,6 +6,6 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('trainees/', include('trainee.urls')),
     path('track/', include('track.urls')),
-    # path('course', include('course.urls')),
+    path('course/', include('course.urls')),
     path('api-auth/', include('rest_framework.urls'))
 ] +static(settings.MEDIA_URL,document_root= settings.MEDIA_ROOT)
