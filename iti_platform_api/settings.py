@@ -147,5 +147,5 @@ EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True # secure
 EMAIL_HOST_USER = 'mostafakadry806@gmail.com'
-EMAIL_HOST_PASSWORD = "ckuowctfhzhnmqif"
+EMAIL_HOST_PASSWORD = ""
 AUTH_USER_MODEL = 'trainee.Trainee'
