@@ -5,6 +5,7 @@ from track.models import Track
 class Trainee(AbstractUser):
     track = models.ForeignKey(Track, on_delete=models.CASCADE, null=True, blank=True)
     email = models.EmailField(max_length=100, unique=True)
+    is_email_verified = models.BooleanField(default=False)
     active = models.BooleanField(default=False)
     REQUIRED_FIELDS = ['email', 'track']
     USERNAME_FIELD = "username"

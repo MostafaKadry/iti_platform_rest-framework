@@ -4,7 +4,7 @@ from .models import Trainee
 class TraineeSerializer(serializers.ModelSerializer):
     class Meta:
         model = Trainee
-        fields = ['id', 'username', 'track', 'is_active', 'is_staff']
+        fields = ['id', 'username', 'track', 'email', 'is_email_verified' ,'is_active', 'is_staff']
 
     def create(self, validated_data):
         password = validated_data.pop("password", None)
