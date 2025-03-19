@@ -1,7 +1,11 @@
 from django.shortcuts import get_object_or_404
+from rest_framework.decorators import permission_classes
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
+from django.contrib.auth import  authenticate, login
+from rest_framework.authtoken.models import Token
 
 from django.core.mail import send_mail
 from django.template.loader import render_to_string
@@ -70,4 +74,45 @@ class TraineeDetailAPIView(APIView):
         trainee.delete()
         return Response({"message": "Trainee deleted successfully"}, status=status.HTTP_204_NO_CONTENT)
 
-# Signin Trainee
+# Signin Trainee with built-in Django's authenticate() method
+# class SignInTraineeAPIView(APIView):
+#     def post(self, request):
+#         username = request.data.get("username")
+#         password = request.data.get("password")
+#         user = authenticate(username=username, password=password)
+#         if user is not None:
+#             login(request, user)
+#             return Response({"message": "Trainee signed in successfully"}, status=status.HTTP_200_OK)
+#         else:
+#             return Response({"message": "Invalid credentials"}, status=status.HTTP_401_UNAUTHORIZED)
+#
+
+
+# Signin Trainee Using Django REST Framework's Token Authentication
+class SignInTraineeAPIView(APIView):
+    def post(self, request):
+        print(f"Received username: {request.data.get('username')}")
+        print(f"Received password: {request.data.get('password')}")
+
+        username = request.data.get("username")
+        password = request.data.get("password")
+        user = authenticate(username=username, password=password)
+        if user is not None:
+            # Generate or get an existing token
+            token, created = Token.objects.get_or_create(user=user)
+            return Response({
+                "message": "Trainee signed in successfully",
+                "token": token.key,
+                "user_id": user.id,
+                "username": user.username
+            }, status=status.HTTP_200_OK)
+
+        else:
+            return Response({"message": "Invalid credentials"}, status=status.HTTP_401_UNAUTHORIZED)
+
+# logout Trainee of token auth
+class SignOutTraineeAPIView(APIView):
+    permission_classes = [IsAuthenticated]
+    def post(self, request):
+        request.user.auth_token.delete()
+        return Response({"message": "Trainee signed out successfully"}, status=status.HTTP_200_OK)
